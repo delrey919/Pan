@@ -14,35 +14,35 @@ class CategorySeeder extends Seeder
     public function run(): void
     {
         Categories::create([
-            'name' => 'Museo',
+            'name' => 'Deportivos',
         ]);
 
         Categories::create([
-            'name' => 'Parque',
+            'name' => 'Casuales',
         ]);
 
         Categories::create([
-            'name' => 'Castillo',
+            'name' => 'Formales',
         ]);
 
         Categories::create([
-            'name' => 'Iglesia',
+            'name' => 'Botas',
         ]);
 
         Categories::create([
-            'name' => 'Biblioteca',
+            'name' => 'Sandalias',
         ]);
 
         Categories::create([
-            'name' => 'Monumento',
+            'name' => 'Zapatillas',
+        ]);
+
+        Categories::create([
+            'name' => 'Mocasines',
         ]);
 
         Categories::create([
             'name' => 'Otros',
-        ]);
-
-        Categories::create([
-            'name' => 'Plaza',
         ]);
     }
 }

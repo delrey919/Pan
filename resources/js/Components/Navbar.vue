@@ -16,7 +16,7 @@ const toggleMenu = () => {
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
                         <Link href="/" class="text-white font-bold text-xl">
-                            Shoe Store
+                            Inicio
                         </Link>
                     </div>
                     <div class="hidden md:block">

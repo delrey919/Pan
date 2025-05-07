@@ -1,49 +1,49 @@
 <template>
     <Navbar />
-    <div class="text-center text-5xl p-4" @click="Welcome">
-        Lista de Zapatos
-    </div>
-    <div class="text-center text-xl p-4">
-        <button @click="CreateZapatos" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2">
-            Crear Zapatos
-        </button>
-    </div>
-    <div class="text-center text-xl p-4">
-        <button @click="CreateCategories" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2">
-            Crear Categorias
-        </button>
-    </div>
-
-    <!-- Carrusel de Imágenes Estáticas -->
-    <div class="w-full max-w-4xl mx-auto mt-10">
-        <div class="relative overflow-hidden rounded-xl shadow-lg">
-            <img
-                :src="getImageUrl(images[currentIndex])"
-                :alt="imageNames[currentIndex]"
-                class="w-full h-64 object-cover transition-all duration-500"
-            />
-            <div class="absolute bottom-0 w-full bg-black bg-opacity-50 text-white p-4">
-                <div class="text-center text-lg font-semibold">
-                    {{ imageNames[currentIndex] }}
-                </div>
-            </div>
-            <button @click="prevImage"
-                class="absolute top-1/2 left-2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white px-3 py-1 rounded-full hover:bg-opacity-75">
-                ‹
+    <div class="container mx-auto px-4">
+        <div class="text-center text-3xl md:text-5xl p-4" @click="Welcome">
+            Lista de Zapatos
+        </div>
+        <div class="text-center text-lg md:text-xl p-4 space-y-2 md:space-y-0 md:space-x-4">
+            <button @click="CreateZapatos" class="w-full md:w-auto bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Crear Zapatos
             </button>
-            <button @click="nextImage"
-                class="absolute top-1/2 right-2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white px-3 py-1 rounded-full hover:bg-opacity-75">
-                ›
+            <button @click="CreateCategories" class="w-full md:w-auto bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Crear Categorias
             </button>
         </div>
-        <div class="flex justify-center mt-4 space-x-2">
-            <span
-                v-for="(_, index) in images"
-                :key="index"
-                @click="goToImage(index)"
-                class="w-3 h-3 rounded-full cursor-pointer transition-all duration-300"
-                :class="{ 'bg-gray-800': index === currentIndex, 'bg-gray-400': index !== currentIndex }"
-            />
+
+        <!-- Carrusel de Imágenes Estáticas -->
+        <div class="w-full max-w-4xl mx-auto mt-10">
+            <div class="relative overflow-hidden rounded-xl shadow-lg">
+                <img
+                    :src="getImageUrl(images[currentIndex])"
+                    :alt="imageNames[currentIndex]"
+                    class="w-full h-48 md:h-64 object-cover transition-all duration-500"
+                />
+                <div class="absolute bottom-0 w-full bg-black bg-opacity-50 text-white p-4">
+                    <div class="text-center text-lg font-semibold">
+                        {{ imageNames[currentIndex] }}
+                    </div>
+                </div>
+                <button @click="prevImage"
+                    class="absolute top-1/2 left-2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white px-3 py-1 rounded-full hover:bg-opacity-75">
+                    ‹
+                </button>
+                <button @click="nextImage"
+                    class="absolute top-1/2 right-2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white px-3 py-1 rounded-full hover:bg-opacity-75">
+                    ›
+                </button>
+            </div>
+            <div class="flex justify-center mt-4 space-x-2">
+                <span
+                    v-for="(_, index) in images"
+                    :key="index"
+                    @click="goToImage(index)"
+                    class="w-3 h-3 rounded-full cursor-pointer transition-all duration-300"
+                    :class="{ 'bg-gray-800': index === currentIndex, 'bg-gray-400': index !== currentIndex }"
+                />
+            </div>
         </div>
     </div>
 </template>
