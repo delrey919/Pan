@@ -13,17 +13,17 @@
             </button>
         </div>
 
-        <!-- Carrusel de Imágenes Estáticas -->
+        <!-- Carrusel de Imágenes -->
         <div class="w-full max-w-4xl mx-auto mt-10">
             <div class="relative overflow-hidden rounded-xl shadow-lg">
                 <img
-                    :src="getImageUrl(images[currentIndex])"
-                    :alt="imageNames[currentIndex]"
+                    :src="getImageUrl(images[currentImageIndex])"
+                    :alt="imageNames[currentImageIndex]"
                     class="w-full h-48 md:h-64 object-cover transition-all duration-500"
                 />
                 <div class="absolute bottom-0 w-full bg-black bg-opacity-50 text-white p-4">
                     <div class="text-center text-lg font-semibold">
-                        {{ imageNames[currentIndex] }}
+                        {{ imageNames[currentImageIndex] }}
                     </div>
                 </div>
                 <button @click="prevImage"
@@ -41,10 +41,58 @@
                     :key="index"
                     @click="goToImage(index)"
                     class="w-3 h-3 rounded-full cursor-pointer transition-all duration-300"
-                    :class="{ 'bg-gray-800': index === currentIndex, 'bg-gray-400': index !== currentIndex }"
+                    :class="{ 'bg-gray-800': index === currentImageIndex, 'bg-gray-400': index !== currentImageIndex }"
                 />
             </div>
         </div>
+
+        <!-- Carrusel de Texto
+        <div class="w-full max-w-4xl mx-auto mt-10 mb-16">
+            <div class="relative overflow-hidden rounded-xl shadow-lg bg-gradient-to-r from-blue-500 to-purple-600 p-8">
+                <div class="relative h-32">
+                    <transition-group 
+                        name="slide" 
+                        tag="div" 
+                        class="absolute w-full"
+                    >
+                        <div 
+                            v-for="(zapato, index) in zapatos" 
+                            :key="zapato.id"
+                            v-show="currentTextIndex === index"
+                            class="text-center text-white"
+                        >
+                            <h2 class="text-2xl md:text-3xl font-bold mb-4">{{ zapato.name }}</h2>
+                            <p class="text-lg md:text-xl">{{ zapato.description }}</p>
+                            <p class="text-md mt-2">Categoría: {{ zapato.category?.name || 'Sin categoría' }}</p>
+                            <p class="text-md">Número: {{ zapato.number }}</p>
+                        </div>
+                    </transition-group>
+                </div>
+                
+                Controles del carrusel de texto
+                <div class="flex justify-center mt-6 space-x-4">
+                    <button @click="prevText"
+                        class="bg-white bg-opacity-20 text-white px-4 py-2 rounded-full hover:bg-opacity-30 transition-all">
+                        Anterior
+                    </button>
+                    <button @click="nextText"
+                        class="bg-white bg-opacity-20 text-white px-4 py-2 rounded-full hover:bg-opacity-30 transition-all">
+                        Siguiente
+                    </button>
+                </div> 
+
+                Indicadores del carrusel de texto
+                <div class="flex justify-center mt-4 space-x-2">
+                    <span
+                        v-for="(_, index) in zapatos"
+                        :key="index"
+                        @click="goToText(index)"
+                        class="w-3 h-3 rounded-full cursor-pointer transition-all duration-300"
+                        :class="{ 'bg-white': index === currentTextIndex, 'bg-white bg-opacity-50': index !== currentTextIndex }"
+                    />
+                </div> 
+            </div> 
+        </div> -->
     </div>
 </template>
 
@@ -53,8 +101,18 @@ import { Link, router } from '@inertiajs/vue3';
 import { ref, onMounted, onUnmounted } from 'vue';
 import Navbar from '@/Components/Navbar.vue';
 
-const currentIndex = ref(0);
-const autoplayInterval = ref(null);
+const currentImageIndex = ref(0);
+const currentTextIndex = ref(0);
+const imageAutoplayInterval = ref(null);
+const textAutoplayInterval = ref(null);
+
+// Props para recibir los datos de las tablas
+const props = defineProps({
+    zapatos: {
+        type: Array,
+        required: true
+    }
+});
 
 // Array de nombres de imágenes en la carpeta public/images
 const images = [
@@ -82,27 +140,70 @@ function CreateCategories(){
     router.visit('categories/create');
 }
 
+// Funciones para el carrusel de imágenes
 const nextImage = () => {
-    currentIndex.value = (currentIndex.value + 1) % images.length;
+    currentImageIndex.value = (currentImageIndex.value + 1) % images.length;
 };
 
 const prevImage = () => {
-    currentIndex.value = (currentIndex.value - 1 + images.length) % images.length;
+    currentImageIndex.value = (currentImageIndex.value - 1 + images.length) % images.length;
 };
 
 const goToImage = (index) => {
-    currentIndex.value = index;
+    currentImageIndex.value = index;
+};
+
+// Funciones para el carrusel de texto
+const nextText = () => {
+    currentTextIndex.value = (currentTextIndex.value + 1) % props.zapatos.length;
+};
+
+const prevText = () => {
+    currentTextIndex.value = (currentTextIndex.value - 1 + props.zapatos.length) % props.zapatos.length;
+};
+
+const goToText = (index) => {
+    currentTextIndex.value = index;
 };
 
 const getImageUrl = (path) => `/images/${path}`;
 
 onMounted(() => {
-    autoplayInterval.value = setInterval(nextImage, 3000);
+    // Autoplay para el carrusel de imágenes
+    imageAutoplayInterval.value = setInterval(nextImage, 3000);
+    // Autoplay para el carrusel de texto
+    textAutoplayInterval.value = setInterval(nextText, 5000);
 });
 
 onUnmounted(() => {
-    if (autoplayInterval.value) {
-        clearInterval(autoplayInterval.value);
+    if (imageAutoplayInterval.value) {
+        clearInterval(imageAutoplayInterval.value);
+    }
+    if (textAutoplayInterval.value) {
+        clearInterval(textAutoplayInterval.value);
     }
 });
 </script>
+
+<style scoped>
+.slide-enter-active,
+.slide-leave-active {
+    transition: all 0.5s ease;
+}
+
+.slide-enter-from {
+    opacity: 0;
+    transform: translateX(100%);
+}
+
+.slide-leave-to {
+    opacity: 0;
+    transform: translateX(-100%);
+}
+
+.slide-enter-to,
+.slide-leave-from {
+    opacity: 1;
+    transform: translateX(0);
+}
+</style>
