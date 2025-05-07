@@ -7,6 +7,14 @@
             Crear Zapatos
         </button>
     </div>
+    <div class="search-container text-center">
+        <input 
+          type="text" 
+          v-model="search" 
+          placeholder="Buscar por nombre o categoría..." 
+          class="px-4 py-2 border rounded-lg shadow-sm "
+        />
+      </div>
     <div class="p-8">
 
         <table class="w-full border ">
@@ -15,12 +23,24 @@
                     <th class="p-2 border border-black">Name</th>
                     <th class="p-2 border border-black">Description</th>
                     <th class="p-2 border border-black">Number</th>
+                    <th class="p-2 border border-black">Categoria</th>
+                    <th class="p-2 border border-black">Foto</th>
                     <th class="p-2 border border-black">Acciones</th>
                 </tr>
-                <tr v-for="zapato in zapatos" :key="zapatos.id">
+                <tr v-for="zapato in filteredEvents" :key="zapato.id">
                     <td class="p-2 border border-black">{{ zapato.name }}</td>
                     <td class="p-2 border border-black">{{ zapato.description }}</td>
                     <td class="p-2 border border-black">{{ zapato.number }}</td>
+                    <td class="p-2 border border-black">{{ zapato.category?.name || 'No Sale' }}</td>
+                    <td class="p-2 border border-black">
+                        <img
+                            v-if="zapato.photo"
+                            :src="`/storage/${zapato.photo}`"
+                            alt="foto zapato"
+                            class="w-16 h-16 object-cover rounded"
+                        />
+                        <span v-else>No</span>
+                    </td>
                     <td class="p-2 border border-black">
                         <div>
                             <Link :href="route('zapatos.show', zapato.id)" class="text-green-500"> Ver </Link>
@@ -36,11 +56,16 @@
 </template>
 
 <script setup>
-import { Link, router } from '@inertiajs/vue3';
+import { Head, Link, router } from '@inertiajs/vue3';
+import { ref, defineProps, computed } from 'vue';
+import axios from 'axios';
 
 const props = defineProps({
     zapatos: Array,
+    
 });
+
+const search = ref('')
 
 function DeleteZapatos(id){
     router.delete(route('zapatos.destroy', id))
@@ -52,5 +77,13 @@ function Welcome(){
 function CreateZapatos(){
     router.visit('zapatos/create');
 }
+
+const filteredEvents = computed(() =>
+  props.zapatos.filter(event =>
+    event.name.toLowerCase().includes(search.value.toLowerCase()) ||
+    (event.category && event.category.name &&
+      event.category.name.toLowerCase().includes(search.value.toLowerCase()))
+  )
+);
 
 </script>

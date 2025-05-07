@@ -5,41 +5,41 @@
             <form @submit.prevent="submit">
                 <div class="mb-3">
                     <label for="name" class="block mb-1">name:</label>
-                    <input
-                        type="text"
-                        id="name"
-                        v-model="form.name"
-                        class="w-full border p-2 rounded"
-                        required
-                    />
+                    <input type="text" id="name" v-model="form.name" class="w-full border p-2 rounded" required />
                 </div>
 
                 <div class="mb-3">
                     <label for="description" class="block mb-1">Description:</label>
-                    <input
-                        type="text"
-                        id="description"
-                        v-model="form.description"
-                        rows="3"
-                        class="w-full border p-2 rounded"
-                        required
-                    ></input>
+                    <input type="text" id="description" v-model="form.description" rows="3"
+                        class="w-full border p-2 rounded" required></input>
                 </div>
                 <div class="mb-3">
                     <label for="number" class="block mb-1">number:</label>
+                    <input type="text" id="number" v-model="form.number" rows="3" class="w-full border p-2 rounded"
+                        required></input>
+                </div>
+                <div class="mb-3">
+                    <label for="category" class="block mb-1">Categoria:</label>
+                    <select id="category_id" v-model="form.category_id" required>
+                        <option v-for="category in categories" :key="category.id" :value="category.id">{{ category.name
+                            }}</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="photo" class="block mb-1">Foto:</label>
                     <input
-                        type="text"
-                        id="number"
-                        v-model="form.number"
-                        rows="3"
+                        type="file"
+                        id="photo"
+                        accept="image/*"
+                        @change="e => form.photo = e.target.files[0]"
                         class="w-full border p-2 rounded"
-                        required
-                    ></input>
+                    />
                 </div>
 
                 <div class="flex justify-between mt-4">
                     <Link :href="route('zapatos.index')" class="bg-gray-300 px-3 py-1 rounded">
-                        Cancelar
+                    Cancelar
                     </Link>
                     <button type="submit" class="bg-blue-500 text-white px-3 py-1 rounded">
                         Guardar
@@ -52,16 +52,18 @@
 
 <script setup>
 import { Head, Link, useForm } from '@inertiajs/vue3';
-import { defineProps , onMounted, ref } from 'vue';
+import { defineProps, onMounted, ref } from 'vue';
 
 const props = defineProps({
-    zapatos: Array,
+    categories: Array,
 });
 
 const form = useForm({
-    name: '',    
+    name: '',
     description: '',
     number: '',
+    category_id: '',
+    photo: null,
 });
 
 function submit() {

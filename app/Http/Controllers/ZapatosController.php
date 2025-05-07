@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Zapatos;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Models\Categories;
 
 class ZapatosController extends Controller
 {
@@ -14,7 +15,7 @@ class ZapatosController extends Controller
     public function index()
     {
         return Inertia::render('ListZapatos', [
-            'zapatos' => Zapatos::all()
+            'zapatos' => Zapatos::with('category')->get()
         ]);
     }
 
@@ -23,7 +24,10 @@ class ZapatosController extends Controller
      */
     public function create()
     {
-        return Inertia::render('CreateZapatos');
+        $categories = Categories::all();
+        return Inertia::render('CreateZapatos',[
+            'categories' => $categories
+        ]);
     }
 
     /**
@@ -32,10 +36,17 @@ class ZapatosController extends Controller
     public function store(Request $request)
     {
         $validate = $request->validate([
-            'name' => 'required|max:255',
+            'name'        => 'required|max:255',
             'description' => 'required|max:255',
-            'number' => 'required|max:2' 
+            'number'      => 'required|max:2',
+            'category_id' => 'required|max:255',
+            'photo'       => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
+
+        if ($request->hasFile('photo')) {
+            $path = $request->file('photo')->store('photos', 'public');
+            $validate['photo'] = $path;
+        }
 
         Zapatos::create($validate);
         return redirect()->route('zapatos.index');
@@ -47,7 +58,7 @@ class ZapatosController extends Controller
     public function show(Zapatos $zapato)
     {
         return Inertia::render('ShowZapatos', [
-            'zapatos' => $zapato
+            'zapatos' => $zapato->load('category')
         ]);
     }
 
@@ -57,7 +68,8 @@ class ZapatosController extends Controller
     public function edit(Zapatos $zapato)
     {
         return Inertia::render('EditZapatos', [
-            'zapatos' => $zapato
+            'zapatos' => $zapato,
+            'categories' => Categories::all()
         ]);
     }
 
@@ -67,10 +79,17 @@ class ZapatosController extends Controller
     public function update(Request $request, Zapatos $zapato)
     {
         $validate = $request->validate([
-            'name' => 'required|max:255',
+            'name'        => 'required|max:255',
             'description' => 'required|max:255',
-            'number' => 'required|max:2' 
+            'number'      => 'required|max:2',
+            'category_id' => 'required|max:255',
+            'photo'       => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
+
+        if ($request->hasFile('photo')) {
+            $path = $request->file('photo')->store('photos', 'public');
+            $validate['photo'] = $path;
+        }
 
         $zapato->update($validate);
         return redirect()->route('zapatos.index');

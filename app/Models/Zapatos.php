@@ -9,6 +9,13 @@ class Zapatos extends Model
     protected $fillable = [
         'name',
         'description',
-        'number'
+        'number',
+        'category_id',
+        'photo'
     ];
+
+    public function category()
+    {
+        return $this->belongsTo(Categories::class);
+    }
 }
