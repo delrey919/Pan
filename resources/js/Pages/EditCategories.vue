@@ -1,4 +1,5 @@
 <template>
+    <Navbar />
     <div class="container mx-auto p-4">
         <h1 class="text-xl font-bold mb-4">Editar categories</h1>
 
@@ -25,6 +26,7 @@
 <script setup>
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import { defineProps } from 'vue';
+import Navbar from '@/Components/Navbar.vue';
 
 const props = defineProps({
     category: Object,

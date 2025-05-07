@@ -1,4 +1,5 @@
 <template>
+    <Navbar />
     <div class="container mx-auto p-4">
         <h1 class="text-xl font-bold mb-4">Editar zapatos</h1>
 
@@ -22,8 +23,8 @@
                 <div class="mb-3">
                     <label for="categories" class="block mb-1">categories:</label>
                     <select id="category" v-model="form.category_id" required>
-          <option v-for="category in categories" :key="category.id" :value="category.id">{{ category.name }}</option>
-        </select>
+                        <option v-for="category in categories" :key="category.id" :value="category.id">{{ category.name }}</option>
+                    </select>
                 </div>   
 
                 <div class="mb-3">
@@ -32,14 +33,18 @@
                         type="file"
                         id="photo"
                         accept="image/*"
-                        @change="e => form.photo = e.target.files[0]"
+                        @input="handleImageChange"
                         class="w-full border p-2 rounded"
                     />
+                    <div class="p-2 text-left">
+                        <img v-if="previewImage" class="w-20" :src="previewImage" :alt="form.name">
+                        <img v-else-if="zapatos.photo" class="w-20" :src="`/storage/${zapatos.photo}`" :alt="zapatos.name">
+                    </div>
                 </div>
 
                 <div class="flex justify-between mt-4">
                     <Link :href="route('zapatos.index')" class="bg-gray-300 px-3 py-1 rounded">
-                    Cancelar
+                        Cancelar
                     </Link>
                     <button type="submit" class="bg-blue-500 text-white px-3 py-1 rounded">
                         Guardar
@@ -53,11 +58,14 @@
 <script setup>
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import { defineProps, onMounted, ref } from 'vue';
+import Navbar from '@/Components/Navbar.vue';
 
 const props = defineProps({
     zapatos: Object,
     categories: Array,
 });
+
+const previewImage = ref(null);
 
 const form = useForm({
     name: '',
@@ -67,6 +75,15 @@ const form = useForm({
     photo: null,
     _method: 'put',
 });
+
+const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    form.photo = file;
+    
+    if (file) {
+        previewImage.value = URL.createObjectURL(file);
+    }
+};
 
 onMounted(() => {
     if (props.zapatos) {

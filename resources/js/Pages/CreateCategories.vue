@@ -1,4 +1,5 @@
 <template>
+    <Navbar />
     <div class="container mx-auto p-4">
         <h1 class="text-xl font-bold mb-4">Crear City</h1>
         <div class="bg-white p-4 border rounded">
@@ -28,7 +29,8 @@
 
 <script setup>
 import { Head, Link, useForm } from '@inertiajs/vue3';
-import { defineProps , onMounted, ref } from 'vue';
+import { defineProps, onMounted, ref } from 'vue';
+import Navbar from '@/Components/Navbar.vue';
 
 const props = defineProps({
     categories: Array,
