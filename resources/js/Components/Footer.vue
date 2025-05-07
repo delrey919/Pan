@@ -17,18 +17,11 @@
                         </ul>
                     </div>
                     
-                    <div>
-                        <h3 class="font-semibold mb-2">Contacto</h3>
-                        <ul class="space-y-1">
-                            <li class="text-gray-300">Email: info@shoestore.com</li>
-                            <li class="text-gray-300">Teléfono: (123) 456-7890</li>
-                        </ul>
-                    </div>
                 </div>
             </div>
             
             <div class="mt-8 pt-4 border-t border-gray-700 text-center">
-                <p class="text-gray-400">&copy; {{ new Date().getFullYear() }} Shoe Store. Todos los derechos reservados.</p>
+                <p class="text-gray-400">&copy; {{ new Date().getFullYear() }} Denis </p>
             </div>
         </div>
     </footer>

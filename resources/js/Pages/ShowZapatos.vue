@@ -1,49 +1,59 @@
 <template>
     <Navbar />
-    <div class="container mx-auto px-4">
-        <div class="text-xl md:text-2xl p-4 text-center">
-            Show de {{ zapatos.name }}
-        </div>
-        
-        <!-- Tabla Responsive -->
-        <div class="overflow-x-auto p-4">
-            <table class="w-full min-w-[800px]">
-                <tbody>
-                    <tr class="bg-gray-400 text-left">
-                        <th class="p-2 border border-black">ID</th>
-                        <th class="p-2 border border-black">name</th>
-                        <th class="p-2 border border-black">description</th>
-                        <th class="p-2 border border-black">number</th>
-                        <th class="p-2 border border-black">Categoría</th>
-                        <th class="p-2 border border-black">Foto</th>
-                    </tr>
+    <div class="min-h-screen flex flex-col">
+        <main class="container mx-auto px-4 flex-grow" role="main">
+            <h1 class="text-xl md:text-2xl font-bold mb-4 mt-6 text-center" role="heading" aria-level="1">
+                Detalles de {{ zapatos.name }}
+            </h1>
+            
+            <!-- Tabla Responsive -->
+            <div class="overflow-x-auto p-4 bg-white rounded shadow mb-8">
+                <table class="w-full min-w-[800px]" aria-label="Información detallada del zapato">
+                    <tbody>
+                        <tr class="bg-gray-200 text-left">
+                            <th class="p-2 border" scope="col">ID</th>
+                            <th class="p-2 border" scope="col">Nombre</th>
+                            <th class="p-2 border" scope="col">Descripción</th>
+                            <th class="p-2 border" scope="col">Número</th>
+                            <th class="p-2 border" scope="col">Categoría</th>
+                            <th class="p-2 border" scope="col">Foto</th>
+                        </tr>
 
-                    <tr class="border-t">
-                        <td class="p-2 border border-black">{{ zapatos.id }}</td>
-                        <td class="p-2 border border-black">{{ zapatos.name }}</td>
-                        <td class="p-2 border border-black">{{ zapatos.description }}</td>
-                        <td class="p-2 border border-black">{{ zapatos.number }}</td>
-                        <td class="p-2 border border-black">
-                            {{ zapatos.category?.name || 'Sin categoría' }}
-                        </td>
-                        <td class="p-2 border border-black">
-                            <img
-                                v-if="zapatos.photo"
-                                :src="getImageUrl(zapatos.photo)"
-                                alt="foto zapato"
-                                class="w-32 h-32 object-cover rounded"
-                            />
-                            <span v-else>No hay imagen</span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="7" class="p-2 text-center"></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+                        <tr class="border-t hover:bg-gray-50">
+                            <td class="p-2 border">{{ zapatos.id }}</td>
+                            <td class="p-2 border">{{ zapatos.name }}</td>
+                            <td class="p-2 border">{{ zapatos.description }}</td>
+                            <td class="p-2 border">{{ zapatos.number }}</td>
+                            <td class="p-2 border">
+                                {{ zapatos.category?.name || 'Sin categoría' }}
+                            </td>
+                            <td class="p-2 border">
+                                <img
+                                    v-if="zapatos.photo"
+                                    :src="getImageUrl(zapatos.photo)"
+                                    :alt="`Imagen de ${zapatos.name}`"
+                                    class="w-32 h-32 object-cover rounded"
+                                />
+                                <span v-else>No hay imagen</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="text-center mb-8">
+                <Link 
+                    :href="route('zapatos.index')" 
+                    class="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded transition duration-200"
+                    role="button"
+                    aria-label="Volver a la lista de zapatos"
+                >
+                    Volver
+                </Link>
+            </div>
+        </main>
+        <Footer />
     </div>
-    <Footer />
 </template>
 
 <script setup>
@@ -56,5 +66,5 @@ const props = defineProps({
 });
 
 // Helper para convertir ruta de foto en URL pública
-const getImageUrl = path => `/storage/${path}`
+const getImageUrl = path => `/storage/${path}`;
 </script>
