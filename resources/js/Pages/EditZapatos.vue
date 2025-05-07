@@ -20,9 +20,19 @@
                 </div> 
 
                 <div class="mb-3">
-                    <label for="categories" class="block mb-1">categories:</label>
-                    <select id="category" v-model="form.category_id" required>
-                        <option v-for="category in categories" :key="category.id" :value="category.id">{{ category.name }}</option>
+                    <label for="category_id" class="block mb-1">Categoría:</label>
+                    <select
+                        id="category_id"
+                        v-model="form.category_id"
+                        required
+                        aria-required="true"
+                        aria-label="Seleccionar categoría"
+                        class="w-full border p-2 rounded"
+                    >
+                        <option value="">Seleccione una categoría</option>
+                        <option v-for="category in categories" :key="category.id" :value="category.id">
+                            {{ category.name }}
+                        </option>
                     </select>
                 </div>   
 
@@ -45,19 +55,21 @@
                     <Link :href="route('zapatos.index')" class="w-full md:w-auto text-center bg-gray-300 px-3 py-1 rounded">
                         Cancelar
                     </Link>
-                    <button type="submit" class="w-full md:w-auto bg-blue-500 text-white px-3 py-1 rounded">
+                    <button type="submit" class="w-full md:w-auto bg-blue-700 text-white px-3 py-1 rounded">
                         Guardar
                     </button>
                 </div>
             </form>
         </div>
     </div>
+    <Footer/>
 </template>
 
 <script setup>
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import { defineProps, onMounted, ref } from 'vue';
 import Navbar from '@/Components/Navbar.vue';
+import Footer from '@/Components/Footer.vue';
 
 const props = defineProps({
     zapatos: Object,

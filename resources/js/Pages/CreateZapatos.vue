@@ -1,29 +1,61 @@
 <template>
     <Navbar />
-    <div class="container mx-auto px-4">
-        <h1 class="text-xl md:text-2xl font-bold mb-4">Crear Zapatos</h1>
+    <main class="container mx-auto px-4" role="main">
+        <h1 class="text-xl md:text-2xl font-bold mb-4" role="heading" aria-level="1">Crear Zapatos</h1>
         <div class="bg-white p-4 border rounded">
-            <form @submit.prevent="submit" enctype="multipart/form-data" class="max-w-2xl mx-auto">
+            <form @submit.prevent="submit" enctype="multipart/form-data" class="max-w-2xl mx-auto" role="form" aria-label="Formulario de creación de zapato">
                 <div class="mb-3">
-                    <label for="name" class="block mb-1">name:</label>
-                    <input type="text" id="name" v-model="form.name" class="w-full border p-2 rounded" required />
+                    <label for="name" class="block mb-1">Nombre del zapato:</label>
+                    <input 
+                        type="text" 
+                        id="name" 
+                        v-model="form.name" 
+                        class="w-full border p-2 rounded" 
+                        required 
+                        aria-required="true"
+                        aria-label="Nombre del zapato"
+                    />
                 </div>
 
                 <div class="mb-3">
-                    <label for="description" class="block mb-1">Description:</label>
-                    <input type="text" id="description" v-model="form.description" rows="3"
-                        class="w-full border p-2 rounded" required></input>
+                    <label for="description" class="block mb-1">Descripción:</label>
+                    <textarea 
+                        id="description" 
+                        v-model="form.description" 
+                        rows="3"
+                        class="w-full border p-2 rounded" 
+                        required 
+                        aria-required="true"
+                        aria-label="Descripción del zapato"
+                    ></textarea>
                 </div>
+
                 <div class="mb-3">
-                    <label for="number" class="block mb-1">number:</label>
-                    <input type="text" id="number" v-model="form.number" rows="3" class="w-full border p-2 rounded"
-                        required></input>
+                    <label for="number" class="block mb-1">Número:</label>
+                    <input 
+                        type="text" 
+                        id="number" 
+                        v-model="form.number" 
+                        class="w-full border p-2 rounded"
+                        required 
+                        aria-required="true"
+                        aria-label="Número del zapato"
+                    />
                 </div>
+
                 <div class="mb-3">
-                    <label for="category" class="block mb-1">Categoria:</label>
-                    <select id="category_id" v-model="form.category_id" required>
-                        <option v-for="category in categories" :key="category.id" :value="category.id">{{ category.name
-                            }}</option>
+                    <label for="category_id" class="block mb-1">Categoría:</label>
+                    <select 
+                        id="category_id" 
+                        v-model="form.category_id" 
+                        required
+                        aria-required="true"
+                        aria-label="Seleccionar categoría"
+                    >
+                        <option value="">Seleccione una categoría</option>
+                        <option v-for="category in categories" :key="category.id" :value="category.id">
+                            {{ category.name }}
+                        </option>
                     </select>
                 </div>
 
@@ -35,29 +67,46 @@
                         accept="image/*"
                         @input="handleImageChange"
                         class="w-full border p-2 rounded"
+                        aria-label="Seleccionar foto del zapato"
                     />
                     <div class="p-2 text-left">
-                        <img v-if="previewImage" class="w-20" :src="previewImage" :alt="form.name">
+                        <img 
+                            v-if="previewImage" 
+                            class="w-20" 
+                            :src="previewImage" 
+                            :alt="`Vista previa de ${form.name}`"
+                        />
                     </div>
                 </div>
 
                 <div class="flex flex-col md:flex-row justify-between mt-4 space-y-2 md:space-y-0">
-                    <Link :href="route('zapatos.index')" class="w-full md:w-auto text-center bg-gray-300 px-3 py-1 rounded">
+                    <Link 
+                        :href="route('zapatos.index')" 
+                        class="w-full md:w-auto text-center bg-gray-300 px-3 py-1 rounded"
+                        role="button"
+                        aria-label="Cancelar creación de zapato"
+                    >
                         Cancelar
                     </Link>
-                    <button type="submit" class="w-full md:w-auto bg-blue-500 text-white px-3 py-1 rounded">
+                    <button 
+                        type="submit" 
+                        class="w-full md:w-auto bg-blue-700 text-white px-3 py-1 rounded"
+                        aria-label="Guardar zapato"
+                    >
                         Guardar
                     </button>
                 </div>
             </form>
         </div>
-    </div>
+    </main>
+<Footer />
 </template>
 
 <script setup>
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import { defineProps, onMounted, ref } from 'vue';
 import Navbar from '@/Components/Navbar.vue';
+import Footer from '@/Components/Footer.vue';
 
 const props = defineProps({
     categories: Array,

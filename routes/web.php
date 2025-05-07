@@ -7,10 +7,12 @@ use Inertia\Inertia;
 use App\Http\Controllers\ZapatosController;
 use App\Http\Controllers\CategoryController;
 use App\Models\Zapatos;
+use App\Models\Categories;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
         'zapatos' => Zapatos::with('category')->get(),
+        'categories' => Categories::all(),
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,

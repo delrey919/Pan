@@ -22,7 +22,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        Return Inertia::render('CreateCategories');
+        return Inertia::render('CreateCategories');
     }
 
     /**
@@ -44,34 +44,34 @@ class CategoryController extends Controller
      */
     public function show(Categories $category)
     {
-        Return Inertia::render('CreateCategories',[
+        return Inertia::render('CreateCategories',[
             'category' => $category
-    ]);
+        ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
     public function edit(Categories $category)
-{
-    return Inertia::render('EditCategories', [
-        'category' => $category
-    ]);
-}
+    {
+        return Inertia::render('EditCategories', [
+            'category' => $category
+        ]);
+    }
 
-public function update(Request $request, Categories $category)
-{
-    $validate = $request->validate([
-        'name' => 'required|max:255',
-    ]);
+    public function update(Request $request, Categories $category)
+    {
+        $validate = $request->validate([
+            'name' => 'required|max:255',
+        ]);
 
-    $category->update($validate);
-    return redirect()->route('categories.index');
-}
+        $category->update($validate);
+        return redirect()->route('categories.index');
+    }
 
-public function destroy(Categories $category)
-{
-    $category->delete();
-    return redirect()->route('categories.index');
-}
+    public function destroy(Categories $category)
+    {
+        $category->delete();
+        return redirect()->route('categories.index');
+    }
 }

@@ -43,11 +43,13 @@
             </table>
         </div>
     </div>
+    <Footer />
 </template>
 
 <script setup>
 import { Head, Link, router } from '@inertiajs/vue3';
 import Navbar from '@/Components/Navbar.vue';
+import Footer from '@/Components/Footer.vue';
 
 const props = defineProps({
     zapatos: Object,

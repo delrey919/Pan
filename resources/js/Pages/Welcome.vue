@@ -13,6 +13,116 @@
             </button>
         </div>
 
+        <!-- Tabs para alternar entre tablas -->
+        <div class="flex justify-center my-4 gap-4">
+            <button
+                :class="[
+                    'px-4 py-2 rounded font-bold focus:outline-none',
+                    activeTable === 'zapatos'
+                        ? 'bg-blue-700 text-white'
+                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                ]"
+                @click="activeTable = 'zapatos'"
+                aria-pressed="activeTable === 'zapatos'"
+            >
+                Ver Zapatos
+            </button>
+            <button
+                :class="[
+                    'px-4 py-2 rounded font-bold focus:outline-none',
+                    activeTable === 'categorias'
+                        ? 'bg-blue-700 text-white'
+                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                ]"
+                @click="activeTable = 'categorias'"
+                aria-pressed="activeTable === 'categorias'"
+            >
+                Ver Categorías
+            </button>
+        </div>
+
+        <!-- Tabla de Categorías (con tab) -->
+        <section
+            v-if="activeTable === 'categorias'"
+            aria-label="Lista de Categorías"
+            class="bg-white p-4 border rounded mb-8"
+        >
+            <div class="mb-4" role="search">
+                <label for="category-search" class="sr-only">Buscar categorías</label>
+                <input
+                    id="category-search"
+                    type="text"
+                    v-model="searchCategories"
+                    placeholder="Buscar por nombre..."
+                    class="w-full px-4 py-2 border rounded-lg shadow-sm"
+                    aria-label="Buscar categorías por nombre"
+                />
+            </div>
+            <div class="overflow-x-auto" role="region" aria-label="Tabla de categorías">
+                <table class="w-full border min-w-[400px]" role="grid">
+                    <thead>
+                        <tr class="bg-gray-400 text-left">
+                            <th scope="col" class="p-2 border border-black">Nombre</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="category in filteredCategories" :key="category.id">
+                            <td class="p-2 border border-black">{{ category.name }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Tabla de Zapatos (con tab) -->
+        <section
+            v-if="activeTable === 'zapatos'"
+            aria-label="Lista de Zapatos"
+            class="bg-white p-4 border rounded mb-8"
+        >
+            <div class="mb-4" role="search">
+                <label for="zapato-search" class="sr-only">Buscar zapatos</label>
+                <input
+                    id="zapato-search"
+                    type="text"
+                    v-model="searchZapatos"
+                    placeholder="Buscar por nombre o categoría..."
+                    class="w-full px-4 py-2 border rounded-lg shadow-sm"
+                    aria-label="Buscar zapatos por nombre o categoría"
+                />
+            </div>
+            <div class="overflow-x-auto" role="region" aria-label="Tabla de zapatos">
+                <table class="w-full border min-w-[600px]" role="grid">
+                    <thead>
+                        <tr class="bg-gray-400 text-left">
+                            <th scope="col" class="p-2 border border-black">Nombre</th>
+                            <th scope="col" class="p-2 border border-black">Descripción</th>
+                            <th scope="col" class="p-2 border border-black">Número</th>
+                            <th scope="col" class="p-2 border border-black">Categoría</th>
+                            <th scope="col" class="p-2 border border-black">Foto</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="zapato in filteredZapatos" :key="zapato.id">
+                            <td class="p-2 border border-black">{{ zapato.name }}</td>
+                            <td class="p-2 border border-black">{{ zapato.description }}</td>
+                            <td class="p-2 border border-black">{{ zapato.number }}</td>
+                            <td class="p-2 border border-black">{{ zapato.category?.name || 'Sin categoría' }}</td>
+                            <td class="p-2 border border-black">
+                                <img
+                                    v-if="zapato.photo"
+                                    :src="`/storage/${zapato.photo}`"
+                                    :alt="`Foto de ${zapato.name}`"
+                                    class="w-16 h-16 object-cover rounded"
+                                />
+                                <span v-else>No hay imagen</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
         <!-- Carrusel de Imágenes -->
         <div class="w-full max-w-4xl mx-auto mt-10">
             <div class="relative overflow-hidden rounded-xl shadow-lg">
@@ -94,25 +204,47 @@
             </div> 
         </div> -->
     </div>
+    <Footer />
 </template>
 
 <script setup>
 import { Link, router } from '@inertiajs/vue3';
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted, computed } from 'vue';
 import Navbar from '@/Components/Navbar.vue';
+import Footer from '@/Components/Footer.vue';
 
 const currentImageIndex = ref(0);
 const currentTextIndex = ref(0);
 const imageAutoplayInterval = ref(null);
 const textAutoplayInterval = ref(null);
+const activeTable = ref('zapatos'); // Por defecto muestra la tabla de zapatos
 
 // Props para recibir los datos de las tablas
 const props = defineProps({
     zapatos: {
         type: Array,
         required: true
+    },
+    categories: {
+        type: Array,
+        required: true
     }
 });
+
+const searchCategories = ref('');
+const filteredCategories = computed(() =>
+    props.categories.filter(category =>
+        category.name.toLowerCase().includes(searchCategories.value.toLowerCase())
+    )
+);
+
+const searchZapatos = ref('');
+const filteredZapatos = computed(() =>
+    props.zapatos.filter(zapato =>
+        zapato.name.toLowerCase().includes(searchZapatos.value.toLowerCase()) ||
+        (zapato.category && zapato.category.name && zapato.category.name.toLowerCase().includes(searchZapatos.value.toLowerCase()))
+    )
+);
 
 // Array de nombres de imágenes en la carpeta public/images
 const images = [
@@ -184,26 +316,3 @@ onUnmounted(() => {
     }
 });
 </script>
-
-<style scoped>
-.slide-enter-active,
-.slide-leave-active {
-    transition: all 0.5s ease;
-}
-
-.slide-enter-from {
-    opacity: 0;
-    transform: translateX(100%);
-}
-
-.slide-leave-to {
-    opacity: 0;
-    transform: translateX(-100%);
-}
-
-.slide-enter-to,
-.slide-leave-from {
-    opacity: 1;
-    transform: translateX(0);
-}
-</style>
