@@ -1,4 +1,5 @@
 <template>
+    <Navbar />
     <div class="text-xl p-4 text-center">
         Show de {{ categories.name }}
     </div>
@@ -26,6 +27,7 @@
 
 <script setup>
 import { Head, Link, router } from '@inertiajs/vue3';
+import Navbar from '@/Components/Navbar.vue';
 
 const props = defineProps({
     categories: Object,

@@ -1,4 +1,5 @@
 <template>
+    <Navbar />
     <div class="text-center text-5xl p-4" @click="Welcome">
         Lista de Zapatos
     </div>
@@ -53,6 +54,7 @@
 <script setup>
 import { Link, router } from '@inertiajs/vue3';
 import { ref, onMounted, onUnmounted } from 'vue';
+import Navbar from '@/Components/Navbar.vue';
 
 const props = defineProps({
     zapatos: {
