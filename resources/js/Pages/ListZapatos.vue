@@ -122,8 +122,17 @@
             </div>
         </div>
     </main>
+    <!-- Botón para mostrar/ocultar el carrusel -->
+    <div class="w-full max-w-4xl mx-auto mt-6 text-center">
+        <button
+            @click="showCarousel = !showCarousel"
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        >
+            {{ showCarousel ? 'Ocultar Carrusel' : 'Mostrar Carrusel' }}
+        </button>
+    </div>
     <!-- Carrusel de imágenes de zapatos -->
-    <div v-if="props.zapatos.length > 0" class="w-full max-w-4xl mx-auto mt-10 mb-16">
+    <div v-if="showCarousel && props.zapatos.length > 0" class="w-full max-w-4xl mx-auto mt-10 mb-16">
         <div class="relative overflow-hidden rounded-xl shadow-lg">
             <!-- Imagen actual del carrusel -->
             <img
@@ -184,6 +193,7 @@ const search = ref(''); // Para el input de búsqueda
 const currentIndex = ref(0); // Índice actual del carrusel
 const autoplayInterval = ref(null); // Intervalo para el autoplay del carrusel
 const selectedCategory = ref(''); // Categoría seleccionada en el <select>
+const showCarousel = ref(true); // NUEVO: Controla la visibilidad del carrusel
 
 // --- Paginación local (5 elementos por página) ---
 const currentPage = ref(1); // Página actual
