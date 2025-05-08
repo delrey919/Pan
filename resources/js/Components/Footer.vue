@@ -3,8 +3,8 @@
         <div class="container mx-auto">
             <div class="flex flex-col md:flex-row justify-between items-center">
                 <div class="mb-4 md:mb-0">
-                    <h2 class="text-xl font-bold">Shoe Store</h2>
-                    <p class="text-gray-300">La mejor tienda de zapatos online</p>
+                    <h2 class="text-xl font-bold">Zapatos Titulo</h2>
+                    <p class="text-gray-300">A ver si funciona en el test project</p>
                 </div>
                 
                 <div class="flex space-x-8">
