@@ -1,9 +1,12 @@
 <template>
+    <!-- Barra de navegación superior -->
     <Navbar />
     <div class="container mx-auto px-4">
+        <!-- Título principal, clicable para volver al inicio -->
         <div class="text-center text-3xl md:text-5xl p-4" @click="Welcome">
             Lista de Zapatos
         </div>
+        <!-- Botones para crear zapatos o categorías -->
         <div class="text-center text-lg md:text-xl p-4 space-y-2 md:space-y-0 md:space-x-4">
             <button @click="CreateZapatos" class="w-full md:w-auto bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                 Crear Zapatos
@@ -13,7 +16,7 @@
             </button>
         </div>
 
-        <!-- Tabs para alternar entre tablas -->
+        <!-- Tabs para alternar entre tablas de zapatos y categorías -->
         <div class="flex justify-center my-4 gap-4">
             <button
                 :class="[
@@ -47,6 +50,7 @@
             aria-label="Lista de Categorías"
             class="bg-white p-4 border rounded mb-8"
         >
+            <!-- Buscador de categorías -->
             <div class="mb-4" role="search">
                 <label for="category-search" class="sr-only">Buscar categorías</label>
                 <input
@@ -58,6 +62,7 @@
                     aria-label="Buscar categorías por nombre"
                 />
             </div>
+            <!-- Tabla de categorías -->
             <div class="overflow-x-auto" role="region" aria-label="Tabla de categorías">
                 <table class="w-full border min-w-[400px]" role="grid">
                     <thead>
@@ -80,6 +85,7 @@
             aria-label="Lista de Zapatos"
             class="bg-white p-4 border rounded mb-8"
         >
+            <!-- Buscador de zapatos -->
             <div class="mb-4" role="search">
                 <label for="zapato-search" class="sr-only">Buscar zapatos</label>
                 <input
@@ -91,6 +97,7 @@
                     aria-label="Buscar zapatos por nombre o categoría"
                 />
             </div>
+            <!-- Tabla de zapatos -->
             <div class="overflow-x-auto" role="region" aria-label="Tabla de zapatos">
                 <table class="w-full border min-w-[600px]" role="grid">
                     <thead>
@@ -126,6 +133,7 @@
         <!-- Carrusel de Imágenes -->
         <div class="w-full max-w-4xl mx-auto mt-10">
             <div class="relative overflow-hidden rounded-xl shadow-lg">
+                <!-- Imagen actual del carrusel -->
                 <img
                     :src="getImageUrl(images[currentImageIndex])"
                     :alt="imageNames[currentImageIndex]"
@@ -136,6 +144,7 @@
                         {{ imageNames[currentImageIndex] }}
                     </div>
                 </div>
+                <!-- Botones para navegar el carrusel -->
                 <button @click="prevImage"
                     class="absolute top-1/2 left-2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white px-3 py-1 rounded-full hover:bg-opacity-75">
                     ‹
@@ -145,6 +154,7 @@
                     ›
                 </button>
             </div>
+            <!-- Indicadores del carrusel -->
             <div class="flex justify-center mt-4 space-x-2">
                 <span
                     v-for="(_, index) in images"
@@ -156,7 +166,7 @@
             </div>
         </div>
 
-        <!-- Carrusel de Texto
+        <!-- Carrusel de Texto (comentado, puedes activarlo si lo necesitas)
         <div class="w-full max-w-4xl mx-auto mt-10 mb-16">
             <div class="relative overflow-hidden rounded-xl shadow-lg bg-gradient-to-r from-blue-500 to-purple-600 p-8">
                 <div class="relative h-32">
@@ -204,15 +214,19 @@
             </div> 
         </div> -->
     </div>
+    <!-- Pie de página -->
     <Footer />
 </template>
 
 <script setup>
+// Importa los helpers de Inertia y Vue
 import { Link, router } from '@inertiajs/vue3';
 import { ref, onMounted, onUnmounted, computed } from 'vue';
+// Importa los componentes de la barra de navegación y el pie de página
 import Navbar from '@/Components/Navbar.vue';
 import Footer from '@/Components/Footer.vue';
 
+// Variables reactivas para el carrusel y tabs
 const currentImageIndex = ref(0);
 const currentTextIndex = ref(0);
 const imageAutoplayInterval = ref(null);
@@ -231,6 +245,7 @@ const props = defineProps({
     }
 });
 
+// Buscador de categorías
 const searchCategories = ref('');
 const filteredCategories = computed(() =>
     props.categories.filter(category =>
@@ -238,6 +253,7 @@ const filteredCategories = computed(() =>
     )
 );
 
+// Buscador de zapatos
 const searchZapatos = ref('');
 const filteredZapatos = computed(() =>
     props.zapatos.filter(zapato =>
@@ -246,7 +262,7 @@ const filteredZapatos = computed(() =>
     )
 );
 
-// Array de nombres de imágenes en la carpeta public/images
+// Imágenes de ejemplo para el carrusel
 const images = [
     'zapato1.jpeg',
     'zapato2.jpg',
@@ -260,14 +276,13 @@ const imageNames = [
     'Zapatos Formales',
 ];
 
+// Funciones de navegación
 function Welcome(){
     router.visit('/');
 }
-
 function CreateZapatos(){
     router.visit('zapatos/create');
 }
-
 function CreateCategories(){
     router.visit('categories/create');
 }
@@ -276,37 +291,32 @@ function CreateCategories(){
 const nextImage = () => {
     currentImageIndex.value = (currentImageIndex.value + 1) % images.length;
 };
-
 const prevImage = () => {
     currentImageIndex.value = (currentImageIndex.value - 1 + images.length) % images.length;
 };
-
 const goToImage = (index) => {
     currentImageIndex.value = index;
 };
 
-// Funciones para el carrusel de texto
+// Funciones para el carrusel de texto (comentado en el template)
 const nextText = () => {
     currentTextIndex.value = (currentTextIndex.value + 1) % props.zapatos.length;
 };
-
 const prevText = () => {
     currentTextIndex.value = (currentTextIndex.value - 1 + props.zapatos.length) % props.zapatos.length;
 };
-
 const goToText = (index) => {
     currentTextIndex.value = index;
 };
 
+// Devuelve la URL de la imagen
 const getImageUrl = (path) => `/images/${path}`;
 
+// Autoplay de los carruseles
 onMounted(() => {
-    // Autoplay para el carrusel de imágenes
     imageAutoplayInterval.value = setInterval(nextImage, 3000);
-    // Autoplay para el carrusel de texto
     textAutoplayInterval.value = setInterval(nextText, 5000);
 });
-
 onUnmounted(() => {
     if (imageAutoplayInterval.value) {
         clearInterval(imageAutoplayInterval.value);
