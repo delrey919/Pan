@@ -207,7 +207,7 @@ const nextImage = () => {
     }
 };
 
-// Función para ir a la imagen anterior del carrusel
+// Función para ir a la imagen anterior del carrusell
 const prevImage = () => {
     if (props.zapatos.length > 0) {
         currentIndex.value =
