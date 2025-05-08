@@ -28,6 +28,19 @@
                 class="w-full md:w-1/2 px-4 py-2 border rounded-lg shadow-sm"
                 aria-label="Buscar zapatos por nombre o categoría"
             />
+            <!-- Filtro por categoría con accesibilidad -->
+            <label for="category-select" class="sr-only">Filtrar por categoría</label>
+            <select
+                id="category-select"
+                v-model="selectedCategory"
+                class="w-full md:w-1/4 px-4 py-2 border rounded-lg shadow-sm mt-2 md:mt-0 md:ml-4"
+                aria-label="Filtrar por categoría"
+            >
+                <option value="">Todas las categorías</option>
+                <option v-for="category in uniqueCategories" :key="category" :value="category">
+                    {{ category }}
+                </option>
+            </select>
         </div>
 
         <!-- Tabla responsive que muestra la lista de zapatos -->
@@ -170,6 +183,7 @@ const props = defineProps({
 const search = ref(''); // Para el input de búsqueda
 const currentIndex = ref(0); // Índice actual del carrusel
 const autoplayInterval = ref(null); // Intervalo para el autoplay del carrusel
+const selectedCategory = ref(''); // Categoría seleccionada en el <select>
 
 // --- Paginación local (5 elementos por página) ---
 const currentPage = ref(1); // Página actual
@@ -229,9 +243,12 @@ const getImageUrl = (path) => `/storage/${path}`;
 // Computed para filtrar los zapatos según el texto de búsqueda
 const filteredEvents = computed(() =>
   props.zapatos.filter(event =>
-    event.name.toLowerCase().includes(search.value.toLowerCase()) ||
-    (event.category && event.category.name &&
-      event.category.name.toLowerCase().includes(search.value.toLowerCase()))
+    (
+      event.name.toLowerCase().includes(search.value.toLowerCase()) ||
+      (event.category && event.category.name &&
+        event.category.name.toLowerCase().includes(search.value.toLowerCase()))
+    ) &&
+    (selectedCategory.value === '' || event.category?.name === selectedCategory.value)
   )
 );
 
@@ -259,5 +276,15 @@ onUnmounted(() => {
   if (autoplayInterval.value) {
     clearInterval(autoplayInterval.value);
   }
+});
+
+const uniqueCategories = computed(() => {
+  const categories = new Set();
+  props.zapatos.forEach(zapato => {
+    if (zapato.category?.name) {
+      categories.add(zapato.category.name);
+    }
+  });
+  return Array.from(categories);
 });
 </script>
